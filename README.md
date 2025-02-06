@@ -1,30 +1,73 @@
 # Anomaly-Detection-in-Shopping
-A New Approach of Anomaly Detection in Shopping Center Surveillance Videos for Theft Prevention based on RLCNN Model
-1. Data Preparation:
+Introduction
+Human Action Recognition using deep learning models such as Convolutional LSTM (ConvLSTM) and Long-term Recurrent Convolutional Network (LRCN). The goal is to classify short videos into predefined action categories like WalkingWithDog, TaiChi, Swing, and HorseRace.
 
-The code starts by importing necessary libraries like OpenCV (cv2), TensorFlow (tf), and others for video processing, machine learning, and visualization.
-It sets a seed for reproducibility of results.
-frames_extraction function: This function takes a video path as input. It reads the video, resizes each frame to 64x64 pixels, normalizes the pixel values to be between 0 and 1, and then appends these preprocessed frames to a list. It returns the list of frames.
-create_dataset function: This function iterates through the specified classes (e.g., "WalkingWithDog", "TaiChi"). It finds all videos belonging to each class, extracts frames using the frames_extraction function, and stores them along with their corresponding labels (class index) and video paths.
-The create_dataset function is called to create the dataset.
-The labels are converted into one-hot encoded vectors using to_categorical.
-The dataset is split into training and testing sets using train_test_split.
-2. Model Building and Training:
+Explanation
 
-create_convlstm_model and create_LRCN_model functions define the architectures of two different models: ConvLSTM and LRCN (Long-term Recurrent Convolutional Network). Both models are designed for video action recognition. The architectures include layers like ConvLSTM2D, MaxPooling3D, TimeDistributed, Conv2D, MaxPooling2D, LSTM, Flatten, and Dense.
-The models are created using the respective functions.
-The models are compiled using the Adam optimizer, categorical cross-entropy loss function, and accuracy as the evaluation metric.
-The models are trained using the fit method, with early stopping to prevent overfitting.
-The trained models are saved to files.
-3. Model Evaluation and Prediction:
+Import Libraries: 
 
-The trained models are evaluated on the test set using the evaluate method.
-Functions like plot_metric visualize the training and validation metrics (loss and accuracy).
-predict_single_action function: This function takes a video file path and sequence length as input. It extracts frames from the video, preprocesses them (resizing and normalization), feeds them to the LRCN model for prediction, and prints the predicted action and its confidence score.
-Finally, the predict_single_action function performs action recognition on a test video.
-In essence, the code performs the following steps:
+Imports necessary libraries like OpenCV (cv2), TensorFlow (tf), Keras, and others for video processing, model building, and training.
 
-Loads and preprocesses video data for action recognition.
-Builds and trains two deep learning models (ConvLSTM and LRCN).
-Evaluates the performance of the trained models.
-Uses the LRCN model to predict actions in new videos.
+Data Preprocessing:
+
+Frames Extraction: Function frames_extraction reads video files, resizes frames to 64x64, normalizes pixel values, and selects a fixed number of frames (SEQUENCE_LENGTH) to represent the video.
+Dataset Creation: Function create_dataset iterates through video files of different action classes, extracts frames using frames_extraction, and organizes them into features (frames), labels (class indices), and video file paths.
+Data Splitting: Splits the dataset into training and testing sets using train_test_split from scikit-learn.
+Model Building:
+
+ConvLSTM Model: 
+
+Function create_convlstm_model defines the architecture of the ConvLSTM model using Keras layers like ConvLSTM2D, MaxPooling3D, Dropout, Flatten, and Dense. It's designed to capture spatiotemporal features from video sequences.
+LRCN Model: Function create_LRCN_model defines the LRCN model architecture using TimeDistributed layers for applying convolutional operations to each frame, followed by LSTM for sequence learning, and a Dense layer for classification.
+
+Model Training:
+
+Compiles both models using categorical_crossentropy loss, Adam optimizer, and accuracy metric.
+Trains the models using the training data and EarlyStopping callback to prevent overfitting.
+
+Model Evaluation:
+
+Evaluate the trained models on the testing data using evaluation and print the loss and accuracy.
+Saves the models with filenames containing the date, time, loss, and accuracy.
+
+Prediction:
+
+Function predict_single_action takes a video file path and uses the LRCN model to predict the action performed in the video. It preprocesses the video frames similar to the training data and outputs the predicted class name and confidence score.
+
+Implementation Steps
+
+Dataset: Download the UCF50 dataset and place it in the specified directory ("F:/UCF50" in the code).
+Environment: Set up a Python environment with the required libraries (TensorFlow, Keras, OpenCV, etc.). Google Colab is recommended as it provides a pre-configured environment.
+Code Execution: Execute the code cells in the notebook sequentially. This will extract frames, create the dataset, build and train the models, and evaluate their performance.
+Prediction: Use the predict_single_action function to predict the action in a new video by providing its path.
+
+# Human Action Recognition
+
+This project implements human action recognition using ConvLSTM and LRCN models.
+
+## Requirements
+
+- Python 3.x
+- TensorFlow 2.x
+- Keras
+- OpenCV
+- NumPy
+- ... (other libraries)
+
+## Installation
+
+1. Install the required libraries:
+
+## Usage
+
+1. Download the UCF50 dataset and place it in the 'F:/UCF50' directory.
+2. Open the Jupyter Notebook (Human_Action_Recognition.ipynb).
+3. Execute the code cells sequentially to train and evaluate the models.
+4. To predict the action in a new video, use the `predict_single_action` function with the video file path.
+
+## Example
+python predict_single_action('path/to/your/video.mp4', SEQUENCE_LENGTH)
+## Note
+
+- You can modify the `CLASSES_LIST` variable to train the model on different action categories.
+- Adjust the hyperparameters (e.g., SEQUENCE_LENGTH, epochs, batch_size) for optimal performance.
